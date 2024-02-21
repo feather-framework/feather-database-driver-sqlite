@@ -7,7 +7,7 @@
 
 import NIO
 import XCTest
-import FeatherService
+import FeatherComponent
 import FeatherRelationalDatabase
 import FeatherRelationalDatabaseDriverSQLite
 import SQLiteKit
@@ -16,7 +16,7 @@ final class FeatherRelationalDatabaseDriverSQLiteTests: XCTestCase {
 
     func testExample() async throws {
         do {
-            let registry = ServiceRegistry()
+            let registry = ComponentRegistry()
 
             let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
             let threadPool = NIOThreadPool(numberOfThreads: 1)
@@ -31,15 +31,15 @@ final class FeatherRelationalDatabaseDriverSQLiteTests: XCTestCase {
             )
 
             try await registry.addRelationalDatabase(
-                SQLiteRelationalDatabaseServiceContext(
+                SQLiteRelationalDatabaseComponentContext(
                     eventLoopGroup: eventLoopGroup,
                     connectionSource: connectionSource
                 )
             )
 
             try await registry.run()
-            let dbService = try await registry.relationalDatabase()
-            let db = try await dbService.connection()
+            let dbComponent = try await registry.relationalDatabase()
+            let db = try await dbComponent.connection()
 
             do {
 

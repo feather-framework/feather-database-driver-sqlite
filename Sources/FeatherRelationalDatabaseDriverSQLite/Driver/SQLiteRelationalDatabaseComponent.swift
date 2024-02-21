@@ -5,29 +5,29 @@
 //  Created by Tibor Bodecs on 03/12/2023.
 //
 
-import FeatherService
+import FeatherComponent
 import FeatherRelationalDatabase
 import SQLKit
 import SQLiteKit
 @preconcurrency import AsyncKit
 
 @dynamicMemberLookup
-struct SQLiteRelationalDatabaseService: RelationalDatabaseService {
+struct SQLiteRelationalDatabaseComponent: RelationalDatabaseComponent {
 
-    public let config: ServiceConfig
+    public let config: ComponentConfig
     let pool: EventLoopGroupConnectionPool<SQLiteConnectionSource>
 
     subscript<T>(
         dynamicMember keyPath: KeyPath<
-            SQLiteRelationalDatabaseServiceContext, T
+            SQLiteRelationalDatabaseComponentContext, T
         >
     ) -> T {
-        let context = config.context as! SQLiteRelationalDatabaseServiceContext
+        let context = config.context as! SQLiteRelationalDatabaseComponentContext
         return context[keyPath: keyPath]
     }
 
     init(
-        config: ServiceConfig,
+        config: ComponentConfig,
         pool: EventLoopGroupConnectionPool<SQLiteConnectionSource>
     ) {
         self.config = config

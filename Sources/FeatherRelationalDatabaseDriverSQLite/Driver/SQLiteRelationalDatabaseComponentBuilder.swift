@@ -1,21 +1,21 @@
 //
 //  SQLDatabaseDriver.swift
-//  FeatherServiceTests
+//  FeatherComponentTests
 //
 //  Created by Tibor Bodecs on 18/11/2023.
 //
 
-import FeatherService
+import FeatherComponent
 
 import AsyncKit
 import SQLiteKit
 
-struct SQLiteRelationalDatabaseServiceBuilder: ServiceBuilder {
+struct SQLiteRelationalDatabaseComponentBuilder: ComponentBuilder {
 
-    let context: SQLiteRelationalDatabaseServiceContext
+    let context: SQLiteRelationalDatabaseComponentContext
     let pool: EventLoopGroupConnectionPool<SQLiteConnectionSource>
 
-    init(context: SQLiteRelationalDatabaseServiceContext) {
+    init(context: SQLiteRelationalDatabaseComponentContext) {
         self.context = context
 
         self.pool = EventLoopGroupConnectionPool(
@@ -24,8 +24,8 @@ struct SQLiteRelationalDatabaseServiceBuilder: ServiceBuilder {
         )
     }
 
-    func build(using config: ServiceConfig) throws -> Service {
-        SQLiteRelationalDatabaseService(config: config, pool: pool)
+    func build(using config: ComponentConfig) throws -> Component {
+        SQLiteRelationalDatabaseComponent(config: config, pool: pool)
     }
 
     func shutdown() throws {
