@@ -1,14 +1,14 @@
 //
 //  SQLDatabaseContext.swift
-//  FeatherServiceTests
+//  FeatherComponentTests
 //
 //  Created by Tibor Bodecs on 18/11/2023.
 //
 
-import FeatherService
-@preconcurrency import SQLiteKit
+import FeatherComponent
+import SQLiteKit
 
-public struct SQLiteRelationalDatabaseServiceContext: ServiceContext {
+public struct SQLiteRelationalDatabaseComponentContext: ComponentContext {
 
     let eventLoopGroup: EventLoopGroup
     let connectionSource: SQLiteConnectionSource
@@ -21,7 +21,7 @@ public struct SQLiteRelationalDatabaseServiceContext: ServiceContext {
         self.connectionSource = connectionSource
     }
 
-    public func make() throws -> ServiceBuilder {
-        SQLiteRelationalDatabaseServiceBuilder(context: self)
+    public func make() throws -> ComponentBuilder {
+        SQLiteRelationalDatabaseComponentBuilder(context: self)
     }
 }
