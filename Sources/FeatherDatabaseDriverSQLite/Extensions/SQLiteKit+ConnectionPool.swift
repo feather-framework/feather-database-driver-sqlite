@@ -5,27 +5,27 @@
 //  Created by Tibor Bodecs on 03/12/2023.
 //
 
-import NIOCore
-import SQLiteNIO
-import SQLiteKit
 import AsyncKit
 import Logging
+import NIOCore
+import SQLiteKit
+import SQLiteNIO
 
 extension EventLoopGroupConnectionPool where Source == SQLiteConnectionSource {
 
     func database(logger: Logger) -> any SQLiteDatabase {
-        _EventLoopGroupConnectionPoolSQLiteDatabase(pool: self, logger: logger)
+        EventLoopGroupConnectionPoolSQLiteDatabase(pool: self, logger: logger)
     }
 }
 
 extension EventLoopConnectionPool where Source == SQLiteConnectionSource {
 
     func database(logger: Logger) -> any SQLiteDatabase {
-        _EventLoopConnectionPoolSQLiteDatabase(pool: self, logger: logger)
+        EventLoopConnectionPoolSQLiteDatabase(pool: self, logger: logger)
     }
 }
 
-private struct _EventLoopGroupConnectionPoolSQLiteDatabase: SQLiteDatabase {
+private struct EventLoopGroupConnectionPoolSQLiteDatabase: SQLiteDatabase {
 
     let pool: EventLoopGroupConnectionPool<SQLiteConnectionSource>
     let logger: Logger
@@ -52,7 +52,7 @@ private struct _EventLoopGroupConnectionPoolSQLiteDatabase: SQLiteDatabase {
     }
 }
 
-private struct _EventLoopConnectionPoolSQLiteDatabase: SQLiteDatabase {
+private struct EventLoopConnectionPoolSQLiteDatabase: SQLiteDatabase {
     let pool: EventLoopConnectionPool<SQLiteConnectionSource>
     let logger: Logger
 
