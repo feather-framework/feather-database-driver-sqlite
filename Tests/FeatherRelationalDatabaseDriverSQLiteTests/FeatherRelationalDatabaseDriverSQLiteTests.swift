@@ -5,89 +5,84 @@
 //  Created by Tibor Bodecs on 2023. 01. 16..
 //
 
-import NIO
-import XCTest
 import FeatherComponent
 import FeatherRelationalDatabase
 import FeatherRelationalDatabaseDriverSQLite
+import NIO
 import SQLiteKit
+import XCTest
 
 final class FeatherRelationalDatabaseDriverSQLiteTests: XCTestCase {
 
     func testExample() async throws {
+        let registry = ComponentRegistry()
+
+        let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        let threadPool = NIOThreadPool(numberOfThreads: 1)
+        threadPool.start()
+
+        let connectionSource = SQLiteConnectionSource(
+            configuration: .init(
+                storage: .memory,
+                enableForeignKeys: true
+            ),
+            threadPool: threadPool
+        )
+
+        let pool = EventLoopGroupConnectionPool<SQLiteConnectionSource>
+            .init(
+                source: connectionSource,
+                on: eventLoopGroup
+            )
+
         do {
-            let registry = ComponentRegistry()
-
-            let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
-            let threadPool = NIOThreadPool(numberOfThreads: 1)
-            threadPool.start()
-
-            let connectionSource = SQLiteConnectionSource(
-                configuration: .init(
-                    storage: .memory,
-                    enableForeignKeys: true
-                ),
-                threadPool: threadPool
-            )
-
             try await registry.addRelationalDatabase(
-                SQLiteRelationalDatabaseComponentContext(
-                    eventLoopGroup: eventLoopGroup,
-                    connectionSource: connectionSource
-                )
+                SQLiteRelationalDatabaseComponentContext(pool: pool)
             )
 
-            try await registry.run()
             let dbComponent = try await registry.relationalDatabase()
             let db = try await dbComponent.connection()
 
-            do {
-
-                struct Galaxy: Codable {
-                    let id: Int
-                    let name: String
-                }
-
-                try await db
-                    .create(table: "galaxies")
-                    .ifNotExists()
-                    .column("id", type: .int, .primaryKey(autoIncrement: false))
-                    .column("name", type: .text)
-                    .run()
-
-                try await db.delete(from: "galaxies").run()
-
-                try await db
-                    .insert(into: "galaxies")
-                    .columns("id", "name")
-                    .values(SQLBind(1), SQLBind("Milky Way"))
-                    .values(SQLBind(2), SQLBind("Andromeda"))
-                    .run()
-
-                let galaxies =
-                    try await db
-                    .select()
-                    .column("*")
-                    .from("galaxies")
-                    .all(decoding: Galaxy.self)
-
-                print("------------------------------")
-                for galaxy in galaxies {
-                    print(galaxy.id, galaxy.name)
-                }
-                print("------------------------------")
-
-                try await registry.shutdown()
+            struct Galaxy: Codable {
+                let id: Int
+                let name: String
             }
-            catch {
-                try await registry.shutdown()
 
-                throw error
+            try await db
+                .create(table: "galaxies")
+                .ifNotExists()
+                .column("id", type: .int, .primaryKey(autoIncrement: false))
+                .column("name", type: .text)
+                .run()
+
+            try await db.delete(from: "galaxies").run()
+
+            try await db
+                .insert(into: "galaxies")
+                .columns("id", "name")
+                .values(SQLBind(1), SQLBind("Milky Way"))
+                .values(SQLBind(2), SQLBind("Andromeda"))
+                .run()
+
+            let galaxies =
+                try await db
+                .select()
+                .column("*")
+                .from("galaxies")
+                .all(decoding: Galaxy.self)
+
+            print("------------------------------")
+            for galaxy in galaxies {
+                print(galaxy.id, galaxy.name)
             }
+            print("------------------------------")
         }
         catch {
-            XCTFail("\(error)")
+            throw error
         }
 
+        pool.shutdown()
+        try await eventLoopGroup.shutdownGracefully()
+        try await threadPool.shutdownGracefully()
     }
 }
