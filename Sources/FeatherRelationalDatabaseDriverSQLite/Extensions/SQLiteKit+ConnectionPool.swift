@@ -5,11 +5,11 @@
 //  Created by Tibor Bodecs on 03/12/2023.
 //
 
-import NIOCore
-import SQLiteNIO
-import SQLiteKit
 import AsyncKit
 import Logging
+import NIOCore
+import SQLiteKit
+import SQLiteNIO
 
 extension EventLoopGroupConnectionPool where Source == SQLiteConnectionSource {
 
