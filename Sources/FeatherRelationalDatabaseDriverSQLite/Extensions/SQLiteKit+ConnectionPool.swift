@@ -21,7 +21,7 @@ extension EventLoopGroupConnectionPool where Source == SQLiteConnectionSource {
 extension EventLoopConnectionPool where Source == SQLiteConnectionSource {
 
     func database(logger: Logger) -> any SQLiteDatabase {
-        _EventLoopConnectionPoolSQLiteDatabase(pool: self, logger: logger)
+        EventLoopConnectionPoolSQLiteDatabase(pool: self, logger: logger)
     }
 }
 
@@ -52,7 +52,7 @@ private struct _EventLoopGroupConnectionPoolSQLiteDatabase: SQLiteDatabase {
     }
 }
 
-private struct _EventLoopConnectionPoolSQLiteDatabase: SQLiteDatabase {
+private struct EventLoopConnectionPoolSQLiteDatabase: SQLiteDatabase {
     let pool: EventLoopConnectionPool<SQLiteConnectionSource>
     let logger: Logger
 
