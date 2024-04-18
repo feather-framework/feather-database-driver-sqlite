@@ -14,8 +14,7 @@ let package = Package(
         .library(name: "FeatherDatabaseDriverSQLite", targets: ["FeatherDatabaseDriverSQLite"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/feather-framework/feather-database", .upToNextMinor(from: "0.2.0")),
-        .package(path: "../feather-database"),
+        .package(url: "https://github.com/feather-framework/feather-database", .upToNextMinor(from: "0.4.0")),
         .package(url: "https://github.com/vapor/sqlite-kit", from: "4.0.0"),
     ],
     targets: [
