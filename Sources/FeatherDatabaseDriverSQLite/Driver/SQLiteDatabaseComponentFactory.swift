@@ -5,15 +5,15 @@
 //  Created by Tibor Bodecs on 18/11/2023.
 //
 
-import AsyncKit
 import FeatherComponent
 import SQLiteKit
 
-struct SQLiteRelationalDatabaseComponentFactory: ComponentFactory {
+struct SQLiteDatabaseComponentFactory: ComponentFactory {
 
-    let context: SQLiteRelationalDatabaseComponentContext
+    let context: SQLiteDatabaseComponentContext
 
     func build(using config: ComponentConfig) throws -> Component {
-        SQLiteRelationalDatabaseComponent(config: config)
+        SQLiteDatabaseComponent(config: config)
     }
+
 }

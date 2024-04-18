@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "feather-relational-database-driver-sqlite",
+    name: "feather-database-driver-sqlite",
     platforms: [
         .macOS(.v13),
         .iOS(.v16),
@@ -11,24 +11,25 @@ let package = Package(
         .visionOS(.v1),
     ],
     products: [
-        .library(name: "FeatherRelationalDatabaseDriverSQLite", targets: ["FeatherRelationalDatabaseDriverSQLite"]),
+        .library(name: "FeatherDatabaseDriverSQLite", targets: ["FeatherDatabaseDriverSQLite"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/feather-framework/feather-relational-database", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/feather-framework/feather-database", .upToNextMinor(from: "0.4.0")),
         .package(url: "https://github.com/vapor/sqlite-kit", from: "4.0.0"),
     ],
     targets: [
         .target(
-            name: "FeatherRelationalDatabaseDriverSQLite",
+            name: "FeatherDatabaseDriverSQLite",
             dependencies: [
-                .product(name: "FeatherRelationalDatabase", package: "feather-relational-database"),
+                .product(name: "FeatherDatabase", package: "feather-database"),
                 .product(name: "SQLiteKit", package: "sqlite-kit"),
             ]
         ),
         .testTarget(
-            name: "FeatherRelationalDatabaseDriverSQLiteTests",
+            name: "FeatherDatabaseDriverSQLiteTests",
             dependencies: [
-                .target(name: "FeatherRelationalDatabaseDriverSQLite"),
+                .product(name: "FeatherDatabaseTesting", package: "feather-database"),
+                .target(name: "FeatherDatabaseDriverSQLite"),
             ]
         ),
     ]
