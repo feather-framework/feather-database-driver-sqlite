@@ -8,13 +8,14 @@
 import FeatherComponent
 import FeatherDatabase
 import FeatherDatabaseDriverSQLite
+import FeatherDatabaseTesting
 import NIO
 import SQLiteKit
 import XCTest
 
 final class FeatherDatabaseDriverSQLiteTests: XCTestCase {
 
-    func testExample() async throws {
+    func testUsingTestSuite() async throws {
 
         let registry = ComponentRegistry()
 
@@ -41,47 +42,9 @@ final class FeatherDatabaseDriverSQLiteTests: XCTestCase {
             )
         )
 
-        let db = try await registry.database().connection().sqlDatabase
-
-        do {
-
-            struct Galaxy: Codable {
-                let id: Int
-                let name: String
-            }
-
-            try await db
-                .create(table: "galaxies")
-                .ifNotExists()
-                .column("id", type: .int, .primaryKey(autoIncrement: false))
-                .column("name", type: .text)
-                .run()
-
-            try await db.delete(from: "galaxies").run()
-
-            try await db
-                .insert(into: "galaxies")
-                .columns("id", "name")
-                .values(SQLBind(1), SQLBind("Milky Way"))
-                .values(SQLBind(2), SQLBind("Andromeda"))
-                .run()
-
-            let galaxies =
-                try await db
-                .select()
-                .column("*")
-                .from("galaxies")
-                .all(decoding: Galaxy.self)
-
-            print("------------------------------")
-            for galaxy in galaxies {
-                print(galaxy.id, galaxy.name)
-            }
-            print("------------------------------")
-        }
-        catch {
-            XCTFail("\(error)")
-        }
+        let db = try await registry.database()
+        let testSuite = DatabaseTestSuite(db)
+        try await testSuite.testAll()
 
         pool.shutdown()
         try await eventLoopGroup.shutdownGracefully()

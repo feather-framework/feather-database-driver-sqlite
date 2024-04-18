@@ -28,6 +28,7 @@ let package = Package(
         .testTarget(
             name: "FeatherDatabaseDriverSQLiteTests",
             dependencies: [
+                .product(name: "FeatherDatabaseTesting", package: "feather-database"),
                 .target(name: "FeatherDatabaseDriverSQLite"),
             ]
         ),

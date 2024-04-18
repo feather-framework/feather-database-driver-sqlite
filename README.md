@@ -1,4 +1,4 @@
-# Feather  Database Driver SQLite
+# Feather Database Driver SQLite
 
 SQLite driver for the abstract feather-database component for Feather CMS.
 
@@ -13,7 +13,7 @@ Use at your own risk.
 To add a dependency on the package, declare it in your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/feather-framework/feather-database-driver-sqlite", .upToNextMinor(from: "0.2.0")),
+.package(url: "https://github.com/feather-framework/feather-database-driver-sqlite", .upToNextMinor(from: "0.4.0")),
 ```
 
 and to your application target, add `FeatherSQLDatabase` to your dependencies:
@@ -31,7 +31,7 @@ import PackageDescription
 let package = Package(
     name: "my-application",
     dependencies: [
-        .package(url: "https://github.com/feather-framework/feather-database-driver-sqlite", .upToNextMinor(from: "0.2.0")),
+        .package(url: "https://github.com/feather-framework/feather-database-driver-sqlite", .upToNextMinor(from: "0.4.0")),
     ],
     targets: [
         .target(name: "MyApplication", dependencies: [
